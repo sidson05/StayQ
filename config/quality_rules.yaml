@@ -1,0 +1,83 @@
+quality_rules:
+  billing_contracts:
+    required_columns:
+      - "customer_id"
+      - "contract_type"
+      - "monthly_charges"
+      - "total_charges"
+      - "tenure_months"
+      - "signup_date"
+    not_null:
+      - "customer_id"
+      - "monthly_charges"
+      - "contract_type"
+    ranges:
+      monthly_charges:
+        min: 10.0
+        max: 300.0
+      tenure_months:
+        min: 0
+        max: 120
+    allowed_values:
+      contract_type:
+        - "Month-to-month"
+        - "One year"
+        - "Two year"
+
+  billing_invoices:
+    required_columns:
+      - "invoice_id"
+      - "customer_id"
+      - "invoice_date"
+      - "amount"
+      - "payment_status"
+    allowed_values:
+      payment_status:
+        - "PAID"
+        - "FAILED"
+        - "PENDING"
+        - "DISPUTED"
+
+  support_tickets:
+    required_columns:
+      - "ticket_id"
+      - "customer_id"
+      - "created_at"
+      - "issue_type"
+      - "priority"
+      - "status"
+      - "sentiment_score"
+    ranges:
+      sentiment_score:
+        min: -1.0
+        max: 1.0
+      resolution_time_hrs:
+        min: 0.0
+        max: 500.0
+    allowed_values:
+      priority:
+        - "LOW"
+        - "MEDIUM"
+        - "HIGH"
+        - "CRITICAL"
+      status:
+        - "RESOLVED"
+        - "CLOSED"
+        - "OPEN"
+        - "ESCALATED"
+
+  usage_events:
+    required_columns:
+      - "event_id"
+      - "customer_id"
+      - "event_date"
+      - "data_usage_gb"
+      - "login_count"
+      - "streaming_hours"
+    ranges:
+      data_usage_gb:
+        min: 0.0
+        max: 2000.0
+      login_count:
+        min: 0
+        max: 100
