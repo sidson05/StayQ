@@ -1,0 +1,40 @@
+database:
+  db_type: "postgresql"  # "postgresql" or "sqlite" fallback
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "password"
+  database: "churn_warehouse"
+  sqlite_path: "data/warehouse.db"
+
+sources:
+  billing_contracts_path: "data/raw/billing/contracts.csv"
+  billing_invoices_path: "data/raw/billing/invoices.csv"
+  usage_logs_path: "data/raw/usage/usage_events.jsonl"
+  support_api_url: "http://localhost:8001/api/v1/tickets"
+  mock_tickets_db: "services/mock_ticket_api/tickets.json"
+
+etl:
+  batch_size: 1000
+  validation_failure_action: "quarantine" # or "reject"
+  raw_schema: "raw"
+  staging_schema: "staging"
+  analytics_schema: "analytics"
+
+model:
+  target_column: "churn_30d"
+  random_state: 42
+  test_size: 0.2
+  model_dir: "src/ml/artifacts"
+  model_filename: "xgboost_churn_model.joblib"
+  metrics_filename: "model_metrics.json"
+  explainer_filename: "shap_explainer.joblib"
+  optimal_threshold: 0.35 # tuned for retention cost-benefit
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  mock_api_port: 8001
+
+dashboard:
+  port: 8501
