@@ -1,0 +1,44 @@
+{
+  "status": "SUCCESS",
+  "execution_timestamp": "2026-10-23T16:00:48.038419",
+  "duration_seconds": 5.91,
+  "warehouse_type": "sqlite",
+  "analytics_mart_rows": 7043,
+  "data_quality_summary": {
+    "billing_contracts": {
+      "initial_rows": 7043,
+      "passed_rows": 7043,
+      "quarantined_rows": 0,
+      "passed": true,
+      "violations": []
+    },
+    "billing_invoices": {
+      "initial_rows": 42258,
+      "passed_rows": 42258,
+      "quarantined_rows": 0,
+      "passed": true,
+      "violations": []
+    },
+    "support_tickets": {
+      "initial_rows": 7334,
+      "passed_rows": 7334,
+      "quarantined_rows": 0,
+      "passed": true,
+      "violations": []
+    },
+    "usage_events": {
+      "initial_rows": 42258,
+      "passed_rows": 42258,
+      "quarantined_rows": 0,
+      "passed": true,
+      "violations": []
+    },
+    "referential_integrity": {
+      "master_customers": 7043,
+      "orphan_invoice_customers": 0,
+      "orphan_ticket_customers": 0,
+      "orphan_usage_customers": 0,
+      "referential_integrity_intact": true
+    }
+  }
+}
