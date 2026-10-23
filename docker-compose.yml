@@ -67,6 +67,7 @@ services:
       - API_URL=http://fastapi-app:8000
     volumes:
       - ./src/dashboard:/app/src/dashboard
+      - ./.streamlit:/app/.streamlit
     depends_on:
       - fastapi-app
     networks:
