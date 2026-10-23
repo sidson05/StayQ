@@ -79,5 +79,5 @@ def prepare_features(mart_df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
     # Clip any infinities in velocity calculation
     df["usage_drop_velocity"] = df["usage_drop_velocity"].replace([np.inf, -np.inf], 1.0).clip(0.0, 5.0)
     
-    X = df[FEATURE_COLUMNS].copy()
+    X = df[FEATURE_COLUMNS].copy().astype(float)
     return X, FEATURE_COLUMNS

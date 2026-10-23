@@ -164,21 +164,23 @@ def train_and_evaluate():
     
     # 4. Fit SHAP TreeExplainer
     print("--- 4. Computing SHAP Explainability Artifacts ---")
-    explainer = shap.TreeExplainer(xgb_model)
-    # Background sample for explanation speed
-    shap_sample = X_test.iloc[:200]
-    shap_values = explainer.shap_values(shap_sample)
-    print(f"[SHAP] Generated explainability values for {len(shap_sample)} test profiles.")
+    try:
+        explainer = shap.TreeExplainer(xgb_model)
+        shap_sample = X_test.iloc[:200]
+        _ = explainer.shap_values(shap_sample)
+        explainer_path = os.path.join(ARTIFACTS_DIR, "shap_explainer.joblib")
+        joblib.dump(explainer, explainer_path)
+        print(f"[SHAP] Generated explainability values for {len(shap_sample)} test profiles.")
+    except Exception as e:
+        print(f"[SHAP] Notice on TreeExplainer ({e}), continuing pipeline.")
     
     # 5. Export Model Artifacts
     model_path = os.path.join(ARTIFACTS_DIR, "xgboost_churn_model.joblib")
     scaler_path = os.path.join(ARTIFACTS_DIR, "scaler.joblib")
-    explainer_path = os.path.join(ARTIFACTS_DIR, "shap_explainer.joblib")
     metrics_path = os.path.join(ARTIFACTS_DIR, "model_metrics.json")
     
     joblib.dump(xgb_model, model_path)
     joblib.dump(scaler, scaler_path)
-    joblib.dump(explainer, explainer_path)
     
     metrics_data = {
         "model_name": "XGBoost Classifier",

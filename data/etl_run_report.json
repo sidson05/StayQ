@@ -1,7 +1,7 @@
 {
   "status": "SUCCESS",
-  "execution_timestamp": "2026-10-23T16:00:48.038419",
-  "duration_seconds": 5.91,
+  "execution_timestamp": "2026-10-24T00:24:06.550622",
+  "duration_seconds": 2.66,
   "warehouse_type": "sqlite",
   "analytics_mart_rows": 7043,
   "data_quality_summary": {

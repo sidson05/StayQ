@@ -95,7 +95,8 @@ class WarehouseManager:
 
     def read_query(self, query: str) -> pd.DataFrame:
         """Run SQL query and return DataFrame."""
-        return pd.read_sql_query(query, self.engine)
+        with self.engine.connect() as conn:
+            return pd.read_sql_query(text(query), conn)
 
 
 if __name__ == "__main__":
