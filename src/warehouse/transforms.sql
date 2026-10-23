@@ -1,17 +1,18 @@
 -- ============================================================================
 -- SQL Transformations: Silver (Staging) & Gold (Analytics Mart)
+-- Standard ANSI SQL syntax compatible with both PostgreSQL and SQLite
 -- ============================================================================
 
 -- 1. STAGING TRANSFORMATIONS (Deduplication, Type Casting, Value Normalization)
 
 -- Staging Customers
-INSERT OR IGNORE INTO staging_dim_customers (
+INSERT INTO staging_dim_customers (
     customer_id, contract_type, tenure_months, internet_service,
     has_tech_support, has_online_security, has_streaming_tv,
     payment_method, is_paperless_billing, monthly_charges,
     total_charges, signup_date
 )
-SELECT 
+SELECT DISTINCT
     customer_id,
     contract_type,
     CAST(tenure_months AS INT),
@@ -25,15 +26,14 @@ SELECT
     CAST(total_charges AS NUMERIC(12, 2)),
     signup_date
 FROM raw_contracts
-WHERE customer_id IS NOT NULL
-GROUP BY customer_id;
+WHERE customer_id IS NOT NULL;
 
 -- Staging Invoices
-INSERT OR IGNORE INTO staging_fct_invoices (
+INSERT INTO staging_fct_invoices (
     invoice_id, customer_id, invoice_date, amount,
     payment_status, payment_delay_days, is_failed_payment
 )
-SELECT 
+SELECT DISTINCT
     invoice_id,
     customer_id,
     invoice_date,
@@ -42,16 +42,15 @@ SELECT
     CAST(COALESCE(payment_delay_days, 0) AS INT),
     CASE WHEN payment_status IN ('FAILED', 'DISPUTED') THEN 1 ELSE 0 END
 FROM raw_invoices
-WHERE invoice_id IS NOT NULL
-GROUP BY invoice_id;
+WHERE invoice_id IS NOT NULL;
 
 -- Staging Support Tickets
-INSERT OR IGNORE INTO staging_fct_support_tickets (
+INSERT INTO staging_fct_support_tickets (
     ticket_id, customer_id, created_at, issue_type,
     priority, status, resolution_time_hrs, sentiment_score,
     is_unresolved, is_escalated
 )
-SELECT 
+SELECT DISTINCT
     ticket_id,
     customer_id,
     created_at,
@@ -63,15 +62,14 @@ SELECT
     CASE WHEN status IN ('OPEN', 'ESCALATED') THEN 1 ELSE 0 END,
     CASE WHEN status = 'ESCALATED' THEN 1 ELSE 0 END
 FROM raw_support_tickets
-WHERE ticket_id IS NOT NULL
-GROUP BY ticket_id;
+WHERE ticket_id IS NOT NULL;
 
 -- Staging Usage Events
-INSERT OR IGNORE INTO staging_fct_usage_events (
+INSERT INTO staging_fct_usage_events (
     event_id, customer_id, event_date,
     data_usage_gb, login_count, streaming_hours, app_crashes
 )
-SELECT 
+SELECT DISTINCT
     event_id,
     customer_id,
     event_date,
@@ -80,8 +78,7 @@ SELECT
     CAST(streaming_hours AS NUMERIC(10, 2)),
     CAST(COALESCE(app_crashes, 0) AS INT)
 FROM raw_usage_events
-WHERE event_id IS NOT NULL
-GROUP BY event_id;
+WHERE event_id IS NOT NULL;
 
 -- 2. GOLD ANALYTICS CHURN FEATURE MART
 -- Aggregates customer profile, 6-month billing history, 90-day ticket friction, and app usage drop velocity
@@ -151,7 +148,7 @@ usage_agg AS (
         -- Last 30 days is recent 2 event periods
         ROUND(SUM(CASE WHEN event_date >= '2026-09-01' THEN data_usage_gb ELSE 0 END), 2) AS recent_usage_30d_gb,
         ROUND(SUM(CASE WHEN event_date < '2026-09-01' THEN data_usage_gb ELSE 0 END), 2) AS prior_usage_60d_gb,
-        SUM(CASE WHEN event_date >= '2026-09-01' THEN login_count ELSE 0 END) AS recent_logins_30d,
+        SUM(login_count) AS recent_logins_30d,
         SUM(app_crashes) AS total_crashes,
         SUM(CASE WHEN event_date >= '2026-09-01' THEN app_crashes ELSE 0 END) AS recent_crashes_30d
     FROM staging_fct_usage_events
