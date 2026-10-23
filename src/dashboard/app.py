@@ -272,11 +272,11 @@ with tab_simulator:
     res_col1, res_col2, res_col3 = st.columns(3)
     
     with res_col1:
-        st.metric("Baseline Churn Risk", f"{orig_prob:.1%}", base_row["risk_tier"])
+        st.metric(label="Baseline Churn Risk", value=f"{orig_prob:.1%}", delta=f"Risk: {base_row['risk_tier']}", delta_color="off")
     with res_col2:
-        st.metric("Post-Intervention Risk", f"{new_prob:.1%}", sim_result["risk_tier"], delta=f"{delta_prob:+.1%}", delta_color="inverse")
+        st.metric(label=f"Post-Intervention Risk ({sim_result['risk_tier']})", value=f"{new_prob:.1%}", delta=f"{delta_prob:+.1%}", delta_color="inverse")
     with res_col3:
-        mrr_saved = (orig_prob - new_prob) * base_row["monthly_charges"] * 12
+        mrr_saved = max(0.0, (orig_prob - new_prob) * base_row["monthly_charges"] * 12)
         st.metric("Expected Annual LTV Protected", f"${mrr_saved:,.0f}")
 
 # ==============================================================================

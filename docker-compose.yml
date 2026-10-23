@@ -65,6 +65,8 @@ services:
       - "8501:8501"
     environment:
       - API_URL=http://fastapi-app:8000
+    volumes:
+      - ./src/dashboard:/app/src/dashboard
     depends_on:
       - fastapi-app
     networks:
