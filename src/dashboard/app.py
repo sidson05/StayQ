@@ -142,8 +142,9 @@ with tab_watchlist:
         "churn_probability", "risk_tier", "expected_revenue_loss"
     ]
     
+    st.caption(f"Displaying {min(len(filtered_df), 500):,} of {len(filtered_df):,} matching customers (ranked by churn risk).")
     st.dataframe(
-        filtered_df[display_cols].rename(columns={
+        filtered_df[display_cols].head(500).rename(columns={
             "customer_id": "Customer ID",
             "contract_type": "Contract",
             "tenure_months": "Tenure (Mo)",
