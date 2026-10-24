@@ -1,4 +1,4 @@
-# Production Subscription Churn Intelligence Platform
+# StayQ
 
 An enterprise-grade, end-to-end data engineering and machine learning platform that detects and prevents customer subscription churn. 
 
