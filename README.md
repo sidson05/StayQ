@@ -1,8 +1,24 @@
-# StayQ
+# StayQ: Production Subscription Churn Intelligence Platform
 
-An enterprise-grade, end-to-end data engineering and machine learning platform that detects and prevents customer subscription churn. 
+[![CI/CD Pipeline](https://github.com/sidson05/StayQ/actions/workflows/etl_pipeline.yml/badge.svg)](https://github.com/sidson05/StayQ/actions)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-336791.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Apache Airflow](https://img.shields.io/badge/Airflow-2.8-017CEE.svg?logo=apacheairflow&logoColor=white)](https://airflow.apache.org/)
+[![XGBoost](https://img.shields.io/badge/XGBoost-1.7+-EB5424.svg)](https://xgboost.readthedocs.io/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The platform continuously extracts from heterogeneous, messy silos (**Billing CSVs**, **Customer Support REST API**, and **Telemetry JSONL event logs**), enforces automated data quality contracts, stores data in a **Medallion PostgreSQL warehouse** (`raw` ➔ `staging` ➔ `analytics`), trains a cost-sensitive **XGBoost classification model** with **SHAP explainability**, and serves real-time churn predictions through a **FastAPI microservice** and an interactive **Streamlit Retention Cockpit**.
+> **One-Line Overview**: An enterprise-grade, end-to-end data platform demonstrating the complete Data Scientist / Data Engineer lifecycle: multi-source automated ETL, Medallion data warehouse in PostgreSQL, cost-sensitive XGBoost 30-day churn modeling with SHAP explainability, FastAPI microservice serving, and an interactive Streamlit retention cockpit.
+
+---
+
+### 🎯 Skills & Architecture Highlights for Recruiters
+- **Data Engineering**: Multi-source batch ingestion (**Billing CSVs**, **Customer Support REST API**, **App Telemetry JSONL**), automated data quality contracts ([`quality_rules.yaml`](config/quality_rules.yaml)), referential integrity enforcement, and Medallion architecture (`raw` ➔ `staging` ➔ `analytics_mart_churn_features`).
+- **Machine Learning**: Class imbalance calibration (`scale_pos_weight`), feature engineering (behavioral velocity ratios, ticket escalation velocity), TreeExplainer SHAP local attributions, and cost-sensitive ROI threshold tuning (**0.120** cutoff).
+- **Strict Test Set Benchmarks**: **0.9866 ROC-AUC**, **0.9555 PR-AUC**, and **98.93% Churn Recall** (catching 277 / 280 churners) on held-out test data.
+- **Production Serving & Orchestration**: High-throughput FastAPI endpoints, Streamlit "what-if" retention simulator, nightly scheduled Apache Airflow DAG ([`churn_etl_dag.py`](dags/churn_etl_dag.py)), and automated GitHub Actions CI/CD with PostgreSQL service containers.
 
 ---
 
